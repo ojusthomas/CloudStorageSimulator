@@ -13,18 +13,18 @@ public class storageavail {
 		// TODO Auto-generated constructor stub
 	
 	}*/
-	public static void main(double available,double used) throws IOException {
+	public static void main(double available,double capacity) throws IOException {
 		
 	    //Prepare the data set
 	    DefaultPieDataset pieDataset = new DefaultPieDataset();
 	    pieDataset.setValue("Amount of Storage Available", available);
-	    pieDataset.setValue("Amount of Storage Used", used);
+	    pieDataset.setValue("Amount of Storage Used", (capacity-available));
 	    
 	    //Create the chart
 	    JFreeChart chart = ChartFactory.createPieChart(
 	        "Storage Availability Status of Harddisk", pieDataset, true, true, true);
 	    //Save chart as PNG
-	      ChartUtilities.saveChartAsPNG(new File("storageavailable.png"), chart, 400, 300);
+	      ChartUtilities.saveChartAsPNG(new File(Harddisk.re.concat("storageavailable.png")), chart, 400, 300);
 	  }
     
-}
+} 

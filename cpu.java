@@ -7,7 +7,7 @@ package thread1;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Scanner;
-
+import java.io.File;
 /**
  * @author Prranata
  * @model
@@ -22,17 +22,18 @@ public class cpu {
 	static Queue<Integer> q = new ArrayDeque<>();
 	static Queue<Integer> q2 = new ArrayDeque<>();
 	public static void main(String[] args) throws Exception {
-		double capacity,speed;
+		double capacity,speed,d;
 		int choice,readcount=0,writecount=0,currentcount=0;
 		String name_hd;
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		/*System.out.println("Enter the connectivity name and its bandwidth speed");
 		str=scanner.next();
-		ban=scanner.nextInt();*/
+		ban=scanner.nextInt();*/  
 		System.out.println("Enter the name of harddisk");
 		name_hd=scanner.nextLine();
-		System.out.println("Enter the maximum capacity of harddisk");
+		File fd=new File(name_hd);
+		System.out.println("Enter the maximum capacity of harddisk in bytes");
 		capacity=scanner.nextDouble();
 		System.out.println("Enter the maximum transfer speed of harddisk");
 		speed=scanner.nextDouble(); 
@@ -50,11 +51,11 @@ public class cpu {
 		switch(q2.element()){
 			case 1:
 				readcount++;
-			h.readIn();
+				d=h.readIn();
 				break;
 			case 2:
 				writecount++;
-			h.writeIn();
+				d=h.writeIn();
 				break;
 			case 3:
 				currentcount++;

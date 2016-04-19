@@ -3,20 +3,24 @@
  */
 package thread1;
 import java.io.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 //@model
 public class Harddisk  {
-	String name;//name of the harddisk;
+	static String name;//name of the harddisk;
 	public double capacity; //total capacity of harddisk
 	private double maxTransferRate; //maximum transfer rate 
 	private double latency; //latency of harddrive in seconds
 	private double avgSeekTime; // average seek time
 	public double Available;//total space currently available
-	int n=0;//total number of files in the harddrive
+	static int n=0;//total number of files in the harddrive
 	public double currentSize; // current size of harddisk
-	String re;//store the absolute address of the directory
+	static String re;//store the absolute address of the directory
 	static int count =1;
 	static Queue<Integer> q2 = new ArrayDeque<>();
 	public int sector,track;//number of sector and track
@@ -32,13 +36,12 @@ public class Harddisk  {
 	int prev_Track=0;//to find previous track;
 	//Constructor to initialize the harddisk name,its maximum capacity and maximum transfer rate
 	int count2=0;
+	File f;
 	public Harddisk(String name,double capacity,double maxTransferRate1){
-		File f=new File(name);
+		Harddisk.name=name;
+		f=new File(name);
 		re=f.getAbsolutePath();
 		re+="/";
-	
-		if (f.isDirectory()){
-			listf(name);
 		if (name == null || name.length() == 0) {
 			System.out.println("HarddriveStorage(): Error - invalid storage name.");
 			System.exit(0);
@@ -61,50 +64,33 @@ public class Harddisk  {
 				break;
 			}
 		}
-	}
-		else{
-			System.out.println("Directory not found");
-			System.exit(0);
-		}
-		
 		trackallot =new int[track];
 		sectorallot =new String [sector];
-		track_allot =new String [n][2];
+		track_allot =new String [datacentre.n][2];
 		Arrays.fill (sectorallot,"null");
 		Arrays.fill(trackallot,0);
+		
 		}
-	
-	
-	  public List<File> listf(String directoryName) {
-	        File directory = new File(directoryName);
-	        List<File> resultList = new ArrayList<File>();
-	        // get all the files from a directory
-	        File[] fList = directory.listFiles();
-	        resultList.addAll(Arrays.asList(fList));
-	        for (File file : fList) {
-	        	 System.out.println(file);
-	        	 n++;
-	            if (file.isDirectory()) {
-	                resultList.addAll(listf(file.getAbsolutePath()));
-	               
-	            }
-	        }
-	        System.out.println("The no of files are : " +n);
-	        return resultList;
-	    } 
+
 	 //code to  call read,write,update and delete file
-	  public double writeIn() {
-		  System.out.println("Enter the name of file in which you want to write");
-		  File file;
-		  double result=0.0;
-		  @SuppressWarnings("resource")
+	  public double writeIn() throws IOException {
 		Scanner scanner = new Scanner(System.in);
-          String strContent =scanner.nextLine();
+		  System.out.println("Enter the name of file in which you want to write");
+		  String strContent =scanner.nextLine();
+		  double result=0.0;
+          if(f!=null){
+          String loc=StringContainsExample.main(f);
+          FileSearch.main(loc, strContent);
+          File file;
+		  strContent=re.concat(strContent);
+		  System.out.println("the location"+strContent);  
+		  file=new File(strContent);
+      //    File dest = new File(strContent);
+		File source = new File(FileSearch.sour);
+		Files.copy(source.toPath(), file.toPath(),StandardCopyOption.REPLACE_EXISTING);
           writeInLog("PRCOESS: "+count+" PERFORMED WRITE OPERATION \n");
           writeInLog("The file name is :"+strContent);
-          
-          strContent=re.concat(strContent);
-		  file = new File(strContent);
+		  secandtrac(file.length(),strContent);
 		  if ((file.length() + currentSize) > capacity) {
 				System.out.println(name + ".addFile(): Warning - not enough space" + " to store " + file.getName());
 				//System.exit(0);
@@ -125,9 +111,9 @@ public class Harddisk  {
 			 datacentre.state="CONGESTED";
 			 System.out.println("The bandwidth is congested due to large file size.The speed of transfer has been reduced");
 		 }
-		 secandtrac(file.length(),strContent);
+		
 		  count++;
-		  }
+		  }}
 		return result;
 	  }
 	  @SuppressWarnings("resource")
@@ -203,7 +189,7 @@ public class Harddisk  {
 		int min=0,ran = 0;
 		int allot_track=0;
 		boolean allot=false,all=false;
-		 track_allot[count2][0]=name;
+	//	 track_allot[0][0]=name;
 		System.out.println("The no_of_Sector is :"+no_of_Sector+" the max no of sectors "+ max);
 		while(allot!=true){
 			   int randomNum = ThreadLocalRandom.current().nextInt((max - min) + 1) + min;

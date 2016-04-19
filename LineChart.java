@@ -9,6 +9,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 public class LineChart
 {
+	
    public static void main( int read_count,int write_count ) throws Exception
    {
       DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
@@ -19,10 +20,10 @@ public class LineChart
          "Count",
          line_chart_dataset,PlotOrientation.VERTICAL,
          true,true,false);
-
       int width = 640; /* Width of the image */
-      int height = 480; /* Height of the image */ 
-      File lineChart = new File( "LineChart.jpeg" ); 
+      int height = 480; /* Height of the image */    
+      String linechart=Harddisk.re.concat("LineChart.JPEG");
+      File lineChart = new File(linechart); 
       ChartUtilities.saveChartAsJPEG(lineChart ,lineChartObject, width ,height);
    }
 }
