@@ -13,7 +13,7 @@ public class storageavail {
 		// TODO Auto-generated constructor stub
 	
 	}*/
-	public static void main(double available,double capacity) throws IOException {
+	public static void draw(double available,double capacity) throws IOException {
 		
 	    //Prepare the data set
 	    DefaultPieDataset pieDataset = new DefaultPieDataset();

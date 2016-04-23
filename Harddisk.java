@@ -3,9 +3,7 @@
  */
 package thread1;
 import java.io.*;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -13,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 //@model
 public class Harddisk  {
 	static String name;//name of the harddisk;
-	public double capacity; //total capacity of harddisk
+	public double  capacity; //total capacity of harddisk
 	private double maxTransferRate; //maximum transfer rate 
 	private double latency; //latency of harddrive in seconds
 	private double avgSeekTime; // average seek time
@@ -37,6 +35,7 @@ public class Harddisk  {
 	//Constructor to initialize the harddisk name,its maximum capacity and maximum transfer rate
 	int count2=0;
 	File f;
+	private Scanner scanner;
 	public Harddisk(String name,double capacity,double maxTransferRate1){
 		Harddisk.name=name;
 		f=new File(name);
@@ -74,17 +73,18 @@ public class Harddisk  {
 
 	 //code to  call read,write,update and delete file
 	  public double writeIn() throws IOException {
-		Scanner scanner = new Scanner(System.in);
+		scanner = new Scanner(System.in);
 		  System.out.println("Enter the name of file in which you want to write");
 		  String strContent =scanner.nextLine();
-		  double result=0.0;
+		  double result=0.0,size = 0;
           if(f!=null){
           String loc=StringContainsExample.main(f);
           FileSearch.main(loc, strContent);
           File file;
 		  strContent=re.concat(strContent);
-		  System.out.println("the location"+strContent);  
+		//  System.out.println("the location"+strContent);  
 		  file=new File(strContent);
+		  size=file.length();
       //    File dest = new File(strContent);
 		File source = new File(FileSearch.sour);
 		Files.copy(source.toPath(), file.toPath(),StandardCopyOption.REPLACE_EXISTING);
@@ -106,7 +106,7 @@ public class Harddisk  {
 		  writeInLog("\nThe available space in hard disk is:"+Available);
 		  writeInLog("\nProcess Number "+count+" took total "+ result+ "miliseconds to complete its job\n");
 		  res=(long)result;
-		  new NewThread("Write",(res+3000));
+		  new NewThread("Write",res);
 		 if((file.length()/1048576)> datacentre.avg_bandwidth){
 			 datacentre.state="CONGESTED";
 			 System.out.println("The bandwidth is congested due to large file size.The speed of transfer has been reduced");
@@ -114,7 +114,7 @@ public class Harddisk  {
 		
 		  count++;
 		  }}
-		return result;
+		return size;
 	  }
 	  @SuppressWarnings("resource")
 	public double readIn() {
@@ -138,11 +138,7 @@ public class Harddisk  {
 			fintrack(fileName);
 			 writeInLog("Process Number "+count+" took total "+ result+ "miliseconds to complete its job \n");
 			 res=(long)result;
-			 new NewThread("Read",(res+1000));
-			 if((file.length()/1048576)> datacentre.avg_bandwidth){
-				 datacentre.state="CONGESTED";
-				 System.out.println("The bandwidth is congested due to large file size.The speed of transfer has been reduced");
-			 }
+			 new NewThread("Read",res);
 			 count++;
 			 
 			return result;

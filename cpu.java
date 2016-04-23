@@ -7,13 +7,13 @@ package thread1;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Scanner;
-import java.io.File;
 /**
  * @author Prranata
  * @model
  */
 public class cpu {
 	Integer RAM,Process,max_Connection;
+	Harddisk h;
 	public cpu(int ram,int process,int max_connection){
 	RAM=ram;
 	Process=process;
@@ -21,23 +21,33 @@ public class cpu {
 	}
 	static Queue<Integer> q = new ArrayDeque<>();
 	static Queue<Integer> q2 = new ArrayDeque<>();
-	public static void main(String[] args) throws Exception {
-		double capacity,speed,d;
+	double bandwidth;
+	private double d;
+	private datacentre de;
+	double time=0;
+	int count_congestion=0;//to count number of times link is in congestion 
+	public void run() throws Exception {
+		double capacity,speed;
 		int choice,readcount=0,writecount=0,currentcount=0;
 		String name_hd;
 		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
-		/*System.out.println("Enter the connectivity name and its bandwidth speed");
-		str=scanner.next();
-		ban=scanner.nextInt();*/  
+		Scanner scanner = new Scanner(System.in);  
 		System.out.println("Enter the name of harddisk");
 		name_hd=scanner.nextLine();
-		File fd=new File(name_hd);
 		System.out.println("Enter the maximum capacity of harddisk in bytes");
 		capacity=scanner.nextDouble();
 		System.out.println("Enter the maximum transfer speed of harddisk");
 		speed=scanner.nextDouble(); 
-		Harddisk h=new Harddisk(name_hd,capacity,speed);
+		h=new Harddisk(name_hd,capacity,speed);//Harddisk object can only be initialised after its name,capacity and transfer speed has been retreived.
+		de = null;
+		int temp=0;
+		for(int i=0;i<datacentre.actual_no_of_Cpu;i++){
+			if(de!=null){
+			if(de.cs[i].name.equals(name_hd)){
+				bandwidth=de.cs[i].bandwidth;
+				temp=i;
+			}
+		}}
 		do{
 		System.out.println("Enter 1 to read the resource");
 		System.out.println("Enter 2 to write in the resource");
@@ -54,8 +64,16 @@ public class cpu {
 				d=h.readIn();
 				break;
 			case 2:
-				writecount++;
+				if(de!=null)
+				de.cs[temp].state="ALIVE";
+				writecount++; 
 				d=h.writeIn();
+				time=d/bandwidth;
+				if(time>1){
+					count_congestion++;
+					if(de!=null)
+					de.cs[temp].state="CONGESTED";
+				}
 				break;
 			case 3:
 				currentcount++;
@@ -68,14 +86,11 @@ public class cpu {
 				else{
 					h.writeInLog("The power consumption is:"+((currentcount*6.85)+(writecount*9.38)+(readcount*8.44*3))/5+" Watts");
 				}
-			//	ReadandWrite.main(readcount,writecount);
-			//	display.main(readcount,writecount);
-				LineChart.main(readcount, writecount);
-				storageavail.main(h.Available, h.capacity);
-				//displayc.main(h.Available,h.capacity);
+				LineChart.draw(readcount, writecount);
+				storageavail.draw(h.Available, h.capacity);
+				bandwidth_graph.draw(count_congestion,writecount);
 				System.out.println("Program Execution Completed");
 				h.writeInLog("Program Execution Completed");
-				//System.exit(0);
 				break;
 			}
 		q2.poll();
@@ -83,14 +98,6 @@ public class cpu {
 		}
 			count++;
 		}while(choice!=4);
-		
-	
-		
-	
-		//d=h.writeIn();
-		//System.out.println(" The total time is:"+d+" seconds");
-	//	d=h.readIn();
-		//System.out.println(" The total time is:"+d+" seconds");
 	}
 
 }

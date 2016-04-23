@@ -10,7 +10,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 public class LineChart
 {
 	
-   public static void main( int read_count,int write_count ) throws Exception
+   public static void draw( int read_count,int write_count ) throws Exception
    {
       DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
       line_chart_dataset.addValue( read_count , "Workload on Hard disk" , "Number of Read" );

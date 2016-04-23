@@ -11,15 +11,9 @@ public class mainCLass {
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		datacentre d=new datacentre(1);
-		d.main(null);
-		/*File source,dest;
-		String loc=	StringContainsExample.main("cloudsim");
-		source = new File("/Users/Prranata/Documents/workspace/thread1/cgd.txt");
-        dest = new File("/Users/Prranata/Documents/workspace/thread1/cloudsim/cgd.txt");
-		FileSearch.main(loc,"cgd.txt");
-		//copy.main(loc+"bbb.txt", "/Users/Prranata/Documents/workspace/thread1/cloudsim");
-		Files.copy(source.toPath(), dest.toPath());*/
+		cpu c[]=new cpu[4];//cpu object cannot be passed without declaring it.
+		datacentre d=new datacentre(4,c);//creating data centre and object
+		d.set();
 	}
 
 }
